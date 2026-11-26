@@ -1,0 +1,547 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cuối Tuần Đi Đâu</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600&family=Lobster&display=swap">
+<style>
+/* Layout: website một trang, nền đêm xanh và điểm nhấn hổ phách: thanh menu dính, hero, lịch trình một buổi tối, lý do, form chốt kèo (nút "Để sau" né tay), hỏi nhanh. */
+:root {
+  --bg: #101a2b;
+  --bg-2: #15233a;
+  --glow: #243a5c;
+  --card: #182640;
+  --edge: #2e4670;
+  --fg: #f3f6fc;
+  --muted: #a9b9d4;
+  --accent: #ffb347;
+  --accent-ink: #2a1a00;
+  --chip: #213558;
+  --ghost: #26395c;
+  --heart: #ff6b81;
+  --font-display: "Lobster", "Be Vietnam Pro", cursive, sans-serif;
+  --font-body: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: var(--bg); }
+.wrap {
+  width: 100%;
+  max-width: 62rem;
+  margin-inline: auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+header.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); border-bottom: 1px solid var(--edge); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-block: 0.75rem; flex-wrap: wrap; }
+.brand { font-family: var(--font-display); font-size: 1.4rem; color: var(--accent); text-decoration: none; }
+.nav nav { display: flex; gap: 1.1rem; flex-wrap: wrap; }
+.nav a.link { color: var(--muted); text-decoration: none; font-size: 0.92rem; }
+.nav a.link:hover { color: var(--fg); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+
+.hero {
+  background: radial-gradient(circle at 70% 20%, var(--glow), var(--bg) 62%);
+  padding-block: clamp(3rem, 10vw, 6rem);
+}
+.hero .wrap { display: grid; gap: 2rem; grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr); align-items: center; }
+.kicker { margin: 0 0 0.75rem; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+h1 { margin: 0 0 1rem; font-family: var(--font-display); font-weight: 400; font-size: clamp(2.4rem, 8vw, 4.2rem); line-height: 1.1; text-wrap: balance; }
+h2 { margin: 0 0 0.5rem; font-family: var(--font-display); font-weight: 400; font-size: clamp(1.8rem, 5vw, 2.5rem); line-height: 1.2; text-wrap: balance; }
+.lead { margin: 0 0 1.5rem; color: var(--muted); max-width: 34rem; text-wrap: pretty; }
+.btn {
+  display: inline-block; font: inherit; font-weight: 600; border: 0; border-radius: 999px;
+  padding: 0.85rem 1.75rem; cursor: pointer; text-decoration: none; background: var(--accent); color: var(--accent-ink);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.btn:hover { background: #ffc468; }
+.btn.ghost { background: var(--ghost); color: var(--fg); }
+.btn.ghost:hover { background: #31497a; }
+.ticket {
+  background: var(--card); border: 1px solid var(--edge); border-radius: 1.25rem; padding: 1.5rem;
+  box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.35); min-width: 0;
+}
+.ticket dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.6rem 1rem; }
+.ticket dt { color: var(--muted); font-size: 0.85rem; }
+.ticket dd { margin: 0; font-weight: 500; text-align: right; }
+.ticket .stamp { margin: 0 0 1rem; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); }
+
+section.block { padding-block: clamp(2.5rem, 8vw, 4.5rem); }
+section.alt { background: var(--bg-2); }
+.sub { margin: 0 0 2rem; color: var(--muted); max-width: 34rem; }
+
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.timeline li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 1rem; padding-block: 1rem; border-top: 1px solid var(--edge); }
+.timeline li:last-child { border-bottom: 1px solid var(--edge); }
+.timeline time { font-variant-numeric: tabular-nums; color: var(--accent); font-weight: 600; }
+.timeline h3 { margin: 0 0 0.15rem; font-size: 1.05rem; }
+.timeline p { margin: 0; color: var(--muted); }
+
+.reasons { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); }
+.reason { background: var(--card); border: 1px solid var(--edge); border-radius: 1rem; padding: 1.25rem; min-width: 0; }
+.reason h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+.reason p { margin: 0; color: var(--muted); }
+
+.form { background: var(--card); border: 1px solid var(--edge); border-radius: 1.25rem; padding: clamp(1.25rem, 5vw, 2rem); max-width: 40rem; }
+fieldset { border: 0; margin: 0 0 1.25rem; padding: 0; min-width: 0; }
+legend { padding: 0; margin: 0 0 0.6rem; font-size: 0.9rem; color: var(--muted); }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chips input { position: absolute; opacity: 0; pointer-events: none; }
+.chips label { display: inline-block; padding: 0.55rem 1rem; border-radius: 999px; background: var(--chip); border: 1px solid var(--edge); cursor: pointer; font-size: 0.95rem; transition: background 0.15s ease; }
+.chips input:checked + label { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.chips input:focus-visible + label { outline: 3px solid var(--fg); outline-offset: 2px; }
+.actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; min-height: 4rem; }
+#no.flying { position: fixed; z-index: 40; transition: left 0.18s ease, top 0.18s ease; }
+.counter { margin: 0.75rem 0 0; font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.3em; }
+.plan { margin: 0 0 1rem; padding: 1rem 1.1rem; border-radius: 0.9rem; background: var(--chip); border: 1px solid var(--edge); }
+.plan b { color: var(--accent); font-weight: 600; }
+.msg { margin: 0 0 1rem; padding: 0.9rem 1rem; border-radius: 0.9rem; background: var(--bg); border: 1px dashed var(--edge); user-select: all; }
+.form [hidden] { display: none !important; }
+
+details { border-top: 1px solid var(--edge); padding-block: 0.9rem; }
+details:last-of-type { border-bottom: 1px solid var(--edge); }
+summary { cursor: pointer; font-weight: 500; }
+summary:focus-visible { outline: 3px solid var(--fg); outline-offset: 3px; }
+details p { margin: 0.5rem 0 0; color: var(--muted); }
+
+footer { padding-block: 2rem; border-top: 1px solid var(--edge); color: var(--muted); font-size: 0.9rem; text-align: center; }
+
+.stars { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+.star { position: absolute; bottom: -2rem; color: var(--accent); opacity: 0; animation: rise linear forwards; line-height: 1; }
+@keyframes rise {
+  0% { transform: translateY(0) rotate(-10deg); opacity: 0; }
+  12% { opacity: 0.55; }
+  100% { transform: translateY(-115vh) rotate(14deg); opacity: 0; }
+}
+main, header, footer { position: relative; z-index: 2; }
+
+.intro {
+  position: fixed; inset: 0; z-index: 100;
+  background: radial-gradient(circle at 50% 35%, var(--glow), var(--bg) 68%);
+  background-color: var(--bg);
+  display: grid; place-items: center; text-align: center; overflow: hidden;
+  padding-block: calc(1.5rem + env(safe-area-inset-top, 0px)) calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  transition: opacity 0.5s ease;
+}
+.intro.gone { opacity: 0; pointer-events: none; }
+.intro[hidden] { display: none !important; }
+.intro-inner { width: 100%; max-width: 26rem; min-width: 0; }
+.big-heart {
+  width: min(62vw, 14rem); margin: 0 auto 1.25rem; color: var(--heart);
+  filter: drop-shadow(0 1rem 2rem rgba(255, 107, 129, 0.35));
+  animation: beat 1.3s ease-in-out infinite;
+}
+.big-heart svg { display: block; width: 100%; height: auto; fill: currentColor; }
+@keyframes beat { 0%, 60%, 100% { transform: scale(1); } 30% { transform: scale(1.08); } }
+.intro .actions { justify-content: center; }
+#goNo.flying { position: fixed; z-index: 110; transition: left 0.18s ease, top 0.18s ease; }
+
+.music {
+  position: fixed; z-index: 50;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  background: var(--accent); color: var(--accent-ink);
+  box-shadow: 0 0.75rem 2rem rgba(0, 0, 0, 0.45);
+}
+.music[aria-pressed="true"] { background: var(--ghost); color: var(--fg); border: 1px solid var(--edge); }
+
+@media (max-width: 40rem) {
+  .hero .wrap { grid-template-columns: minmax(0, 1fr); }
+  .timeline li { grid-template-columns: 3.6rem 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .star { animation-duration: 0.01s !important; }
+  #no.flying, #goNo.flying, .btn, .chips label, .intro { transition: none; }
+  .big-heart { animation: none; }
+}
+</style>
+
+<div class="stars" id="stars" aria-hidden="true"></div>
+
+<section class="intro" id="intro" aria-label="Câu hỏi mở đầu">
+  <div class="intro-inner">
+    <div class="big-heart" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+    <p class="kicker">Một câu hỏi nhanh</p>
+    <h1>Thứ Sáu 04/12, đi chơi nhé, bạn tôi?</h1>
+    <div class="actions">
+      <button class="btn" id="goYes" type="button">Đi</button>
+      <button class="btn ghost" id="goNo" type="button">Không đi</button>
+    </div>
+    <p class="counter" id="goCounter" aria-live="polite"></p>
+  </div>
+</section>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top">Cuối tuần đi đâu</a>
+    <nav aria-label="Menu">
+      <a class="link" href="#lich-trinh">Lịch trình</a>
+      <a class="link" href="#ly-do">Lý do</a>
+      <a class="link" href="#chot-keo">Chốt kèo</a>
+      <a class="link" href="#hoi-nhanh">Hỏi nhanh</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <p class="kicker">Lời mời thứ Sáu 04/12</p>
+        <h1>Cuối tuần đi chơi nhé, bạn tôi?</h1>
+        <p class="lead">Lâu rồi mình chưa đi đâu chung. Xem lịch trình bên dưới, chọn chỗ và giờ bạn thích, phần còn lại để tôi lo.</p>
+        <a class="btn" href="#chot-keo">Chốt kèo ngay</a>
+        <a class="btn ghost" href="#lich-trinh">Xem lịch trình</a>
+      </div>
+      <aside class="ticket" aria-label="Thông tin buổi hẹn">
+        <p class="stamp">Vé mời một người</p>
+        <dl>
+          <dt>Dành cho</dt><dd>Bạn</dd>
+          <dt>Số người</dt><dd>2</dd>
+          <dt>Gặp lúc</dt><dd>Bạn chọn giờ</dd>
+          <dt>Chi phí</dt><dd>Tôi mời</dd>
+          <dt>Hủy vé</dt><dd>Không áp dụng</dd>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <section class="block alt" id="lich-trinh">
+    <div class="wrap">
+      <h2>Một buổi tối của mình</h2>
+      <p class="sub">Lịch dự kiến cho tối thứ Sáu 04/12. Giờ có thể lệch theo giờ bạn chọn, chỗ nào bạn muốn đổi thì mình đổi.</p>
+      <ol class="timeline">
+        <li><time>18:00</time><div><h3>Tôi qua đón</h3><p>Đúng giờ, không để bạn đứng chờ.</p></div></li>
+        <li><time>18:30</time><div><h3>Ăn tối</h3><p>Bạn chọn quán, tôi chọn món tráng miệng.</p></div></li>
+        <li><time>20:00</time><div><h3>Uống cà phê, đi dạo</h3><p>Chọn chỗ ít người, nói chuyện được.</p></div></li>
+        <li><time>21:30</time><div><h3>Đưa bạn về</h3><p>Nhắn tôi một tin khi bạn vào nhà.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block" id="ly-do">
+    <div class="wrap">
+      <h2>Ba lý do nên đi</h2>
+      <p class="sub">Chỉ có ba lý do, đủ ngắn để đọc hết.</p>
+      <div class="reasons">
+        <article class="reason"><h3>Tôi mời trước</h3><p>Tiền ăn, tiền nước, tiền xe, tôi lo hết. Bạn chỉ cần mang theo tâm trạng vui.</p></article>
+        <article class="reason"><h3>Bạn quyết định</h3><p>Chỗ nào, giờ nào, ăn gì đều do bạn chọn. Tôi chỉ góp ý khi bạn hỏi.</p></article>
+        <article class="reason"><h3>Không áp lực</h3><p>Đi chơi thôi, nói chuyện thoải mái. Bạn muốn về sớm thì tôi đưa về liền.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="chot-keo">
+    <div class="wrap">
+      <h2>Chốt kèo</h2>
+      <p class="sub">Chọn chỗ và giờ rồi bấm "Đi luôn". Bạn sẽ có sẵn tin nhắn để gửi tôi.</p>
+      <div class="form">
+        <div id="ask">
+          <fieldset>
+            <legend>Mình đi đâu?</legend>
+            <div class="chips">
+              <input type="radio" name="place" id="p1" value="uống cà phê" checked><label for="p1">Uống cà phê</label>
+              <input type="radio" name="place" id="p2" value="xem phim"><label for="p2">Xem phim</label>
+              <input type="radio" name="place" id="p3" value="đi dạo"><label for="p3">Đi dạo</label>
+              <input type="radio" name="place" id="p4" value="ăn tối"><label for="p4">Ăn tối</label>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Mấy giờ? (thứ Sáu 04/12)</legend>
+            <div class="chips">
+              <input type="radio" name="when" id="w1" value="thứ Sáu 04/12 lúc 18:00" checked><label for="w1">18:00</label>
+              <input type="radio" name="when" id="w2" value="thứ Sáu 04/12 lúc 18:30"><label for="w2">18:30</label>
+              <input type="radio" name="when" id="w3" value="thứ Sáu 04/12 lúc 19:00"><label for="w3">19:00</label>
+            </div>
+          </fieldset>
+          <div class="actions">
+            <button class="btn" id="yes" type="button">Đi luôn</button>
+            <button class="btn ghost" id="no" type="button">Để sau</button>
+          </div>
+          <p class="counter" id="counter" aria-live="polite"></p>
+        </div>
+
+        <div id="result" hidden>
+          <h2>Vậy là chốt</h2>
+          <p class="plan" id="plan"></p>
+          <p class="sub" style="margin-bottom:1rem">Chép tin nhắn này gửi tôi để tôi biết bạn đã chọn xong.</p>
+          <p class="msg" id="msg"></p>
+          <div class="actions"><button class="btn ghost" id="copy" type="button">Chép tin nhắn</button></div>
+          <p class="counter" id="copied" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="hoi-nhanh">
+    <div class="wrap">
+      <h2>Hỏi nhanh</h2>
+      <p class="sub">Mấy câu bạn có thể đang nghĩ trong đầu.</p>
+      <div style="max-width:40rem">
+        <details><summary>Nếu bạn bận thì sao?</summary><p>Bạn cứ nói ngày rảnh, tôi sắp lịch theo bạn.</p></details>
+        <details><summary>Bạn có phải ăn món tôi chọn không?</summary><p>Không. Quán và món do bạn chọn, tôi chỉ chọn tráng miệng.</p></details>
+        <details><summary>Tôi có đến đúng giờ không?</summary><p>Có. Tôi sẽ nhắn trước 15 phút để bạn khỏi phải chờ.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">Làm bằng một buổi tối rảnh. Cuối tuần gặp nhé.</div>
+</footer>
+
+<button class="btn music" id="music" type="button" aria-pressed="false">Bật nhạc</button>
+<audio id="song" src="nhac.mp3" preload="none" loop></audio>
+
+<script>
+(function () {
+  var yes = document.getElementById("yes");
+  var no = document.getElementById("no");
+  var counter = document.getElementById("counter");
+  var ask = document.getElementById("ask");
+  var result = document.getElementById("result");
+  var stars = document.getElementById("stars");
+  var plan = document.getElementById("plan");
+  var msg = document.getElementById("msg");
+  var copy = document.getElementById("copy");
+  var copied = document.getElementById("copied");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  var noTexts = ["Để sau", "Bận hả?", "Đi mà, tôi đợi", "Tôi chờ được mà", "Chỉ một buổi thôi", "Bấm nút bên kia đi", "Tôi mua đồ uống nha"];
+  var tries = 0;
+  var yesScale = 1;
+
+  function pick(name) {
+    var el = document.querySelector('input[name="' + name + '"]:checked');
+    return el ? el.value : "";
+  }
+
+  function spawn() {
+    var s = document.createElement("span");
+    s.className = "star";
+    s.textContent = Math.random() > 0.5 ? "✦" : "✧";
+    s.style.left = Math.random() * 100 + "%";
+    s.style.fontSize = 12 + Math.random() * 20 + "px";
+    s.style.animationDuration = 7 + Math.random() * 6 + "s";
+    s.style.animationDelay = Math.random() * 1.5 + "s";
+    stars.appendChild(s);
+    setTimeout(function () { if (s.parentNode) s.parentNode.removeChild(s); }, 15000);
+  }
+
+  var ambient = null;
+  if (!reduce) {
+    for (var i = 0; i < 6; i++) spawn();
+    ambient = setInterval(spawn, 2000);
+  }
+
+  function dodge(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    tries += 1;
+    no.textContent = noTexts[Math.min(tries, noTexts.length - 1)];
+    counter.textContent = "Số lần bạn từ chối: " + tries;
+    yesScale = Math.min(1.5, yesScale + 0.07);
+    yes.style.transform = "scale(" + yesScale + ")";
+
+    var pad = 12;
+    var w = no.offsetWidth;
+    var h = no.offsetHeight;
+    var maxX = Math.max(pad, window.innerWidth - w - pad);
+    var maxY = Math.max(pad, window.innerHeight - h - pad);
+    var yr = yes.getBoundingClientRect();
+    var x, y, guard = 0;
+    do {
+      x = pad + Math.random() * (maxX - pad);
+      y = pad + Math.random() * (maxY - pad);
+      guard += 1;
+    } while (guard < 25 && x < yr.right + 8 && x + w > yr.left - 8 && y < yr.bottom + 8 && y + h > yr.top - 8);
+
+    no.classList.add("flying");
+    no.style.left = x + "px";
+    no.style.top = y + "px";
+  }
+
+  no.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") dodge(e); });
+  no.addEventListener("pointerdown", dodge);
+  no.addEventListener("click", dodge);
+  no.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") dodge(e); });
+
+  yes.addEventListener("click", function () {
+    var place = pick("place");
+    var when = pick("when");
+    no.hidden = true;
+    ask.hidden = true;
+    result.hidden = false;
+    plan.innerHTML = "Mình sẽ <b>" + place + "</b> vào <b>" + when + "</b>.";
+    msg.textContent = "Chốt rồi nha, " + when + " mình " + place + ". Nhớ đi đúng giờ đó!";
+    if (!reduce) {
+      for (var i = 0; i < 30; i++) spawn();
+    }
+  });
+
+  copy.addEventListener("click", function () {
+    var text = msg.textContent;
+    function fallback() {
+      var range = document.createRange();
+      range.selectNodeContents(msg);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      copied.textContent = "Đã chọn sẵn tin nhắn, bạn giữ để chép nhé.";
+    }
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        copied.textContent = "Đã chép. Bạn dán gửi tôi nhé.";
+      }, fallback);
+    } catch (err) { fallback(); }
+  });
+  /* Nhạc: ưu tiên file nhac.mp3 đặt cạnh file html; không có thì phát giai điệu lo-fi tự tạo. */
+  var musicBtn = document.getElementById("music");
+  var song = document.getElementById("song");
+  var ctx = null, master = null, timer = null, step = 0, nextT = 0, mode = "";
+  var chords = [[220, 261.63, 329.63], [174.61, 220, 261.63], [261.63, 329.63, 392], [196, 246.94, 293.66]];
+  var eighth = 60 / 76 / 2;
+
+  function tone(freq, t, dur, type, vol) {
+    var o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.linearRampToValueAtTime(vol, t + 0.04);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(master);
+    o.start(t); o.stop(t + dur + 0.05);
+  }
+
+  function schedule() {
+    while (nextT < ctx.currentTime + 0.6) {
+      var bar = Math.floor(step / 8) % 4, pos = step % 8, c = chords[bar];
+      if (pos === 0) c.forEach(function (f) { tone(f, nextT, eighth * 8, "triangle", 0.035); });
+      if (pos === 0 || pos === 4) tone(c[0] / 2, nextT, eighth * 3.5, "sine", 0.1);
+      tone(c[[0, 1, 2, 1, 2, 1, 0, 2][pos]] * 2, nextT, eighth * 1.8, "sine", 0.05);
+      nextT += eighth; step += 1;
+    }
+  }
+
+  function startSynth() {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    if (!ctx) {
+      ctx = new AC();
+      master = ctx.createGain(); master.gain.value = 0.8;
+      var lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 1800;
+      master.connect(lp); lp.connect(ctx.destination);
+    }
+    ctx.resume();
+    nextT = ctx.currentTime + 0.1;
+    timer = setInterval(schedule, 200);
+    schedule();
+    return true;
+  }
+
+  function setOn(on) {
+    musicBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    musicBtn.textContent = on ? "Tắt nhạc" : "Bật nhạc";
+  }
+
+  function stopMusic() {
+    song.pause();
+    if (timer) { clearInterval(timer); timer = null; }
+    if (ctx) ctx.suspend();
+    mode = ""; setOn(false);
+  }
+
+  function startMusic() {
+    if (mode) return;
+    var p;
+    try { p = song.play(); } catch (err) { p = null; }
+    if (p && p.then) {
+      p.then(function () { mode = "file"; setOn(true); }, function () {
+        if (!mode && startSynth()) { mode = "synth"; setOn(true); }
+      });
+    } else if (startSynth()) { mode = "synth"; setOn(true); }
+  }
+
+  musicBtn.addEventListener("click", function () {
+    if (mode) stopMusic(); else startMusic();
+  });
+
+  /* Màn mở đầu: trái tim và hai lựa chọn; chọn "Đi" mới vào trang chính. */
+  var intro = document.getElementById("intro");
+  var goYes = document.getElementById("goYes");
+  var goNo = document.getElementById("goNo");
+  var goCounter = document.getElementById("goCounter");
+  var shell = [document.querySelector("header.nav"), document.querySelector("main"), document.querySelector("footer")];
+  var goTexts = ["Không đi", "Chắc chưa?", "Nghĩ lại đi", "Tôi đợi mà", "Bấm Đi đi mà", "Chỉ một buổi thôi"];
+  var goTries = 0, goScale = 1;
+  shell.forEach(function (el) { if (el) el.setAttribute("inert", ""); });
+  document.body.style.overflow = "hidden";
+
+  function goDodge(e) {
+    if (e && e.preventDefault) e.preventDefault();
+    goTries += 1;
+    goNo.textContent = goTexts[Math.min(goTries, goTexts.length - 1)];
+    goCounter.textContent = "Số lần bạn từ chối: " + goTries;
+    goScale = Math.min(1.5, goScale + 0.08);
+    goYes.style.transform = "scale(" + goScale + ")";
+    var pad = 12, w = goNo.offsetWidth, h = goNo.offsetHeight;
+    var maxX = Math.max(pad, window.innerWidth - w - pad);
+    var maxY = Math.max(pad, window.innerHeight - h - pad);
+    var yr = goYes.getBoundingClientRect();
+    var x, y, guard = 0;
+    do {
+      x = pad + Math.random() * (maxX - pad);
+      y = pad + Math.random() * (maxY - pad);
+      guard += 1;
+    } while (guard < 25 && x < yr.right + 8 && x + w > yr.left - 8 && y < yr.bottom + 8 && y + h > yr.top - 8);
+    goNo.classList.add("flying");
+    goNo.style.left = x + "px";
+    goNo.style.top = y + "px";
+  }
+  goNo.addEventListener("pointerenter", function (e) { if (e.pointerType === "mouse") goDodge(e); });
+  goNo.addEventListener("pointerdown", goDodge);
+  goNo.addEventListener("click", goDodge);
+  goNo.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") goDodge(e); });
+
+  goYes.addEventListener("click", function () {
+    startMusic();
+    intro.classList.add("gone");
+    setTimeout(function () {
+      intro.hidden = true;
+      shell.forEach(function (el) { if (el) el.removeAttribute("inert"); });
+      document.body.style.overflow = "";
+      window.scrollTo(0, 0);
+    }, 500);
+    if (!reduce) for (var i = 0; i < 25; i++) spawn();
+  });
+
+  /* Trình duyệt chặn tự phát tiếng: thử phát ngay khi vào trang (chỉ được với file nhac.mp3 nếu trình duyệt cho phép),
+     không được thì phát ở lần chạm hoặc bấm phím đầu tiên bất kỳ đâu trên trang. */
+  var gestureDone = false;
+  function onFirstGesture(e) {
+    if (gestureDone) return;
+    gestureDone = true;
+    ["pointerdown", "touchstart", "keydown"].forEach(function (n) { document.removeEventListener(n, onFirstGesture, true); });
+    if (e && e.target && (e.target === musicBtn || musicBtn.contains(e.target))) return;
+    startMusic();
+  }
+  ["pointerdown", "touchstart", "keydown"].forEach(function (n) { document.addEventListener(n, onFirstGesture, true); });
+
+  try {
+    var auto = song.play();
+    if (auto && auto.then) auto.then(function () { if (!mode) { mode = "file"; setOn(true); } }, function () {});
+  } catch (err) {}
+})();
+</script>
+
+</body></html>
